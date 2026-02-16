@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subnetting Practice Tool</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Subnetting Practice</h1>
+        <p class="subtitle">Master IP subnetting with interactive practice</p>
+        
+        <div class="stats-bar">
+            <div class="stat-item">
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">Score</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value streak" id="streak">0</div>
+                <div class="stat-label">Streak 🔥</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value" id="accuracy">0%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value timer" id="timer">00:00</div>
+                <div class="stat-label">Time</div>
+            </div>
+        </div>
+
+        <div class="difficulty-selector">
+            <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy</button>
+            <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium</button>
+            <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard</button>
+        </div>
+
+        <div class="advanced-panel">
+            <h3 onclick="toggleAdvanced()">⚙️ Advanced Options <span id="advToggle">▼</span></h3>
+            <div class="advanced-content" id="advancedContent">
+                <div class="option-row">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="examMode" onchange="toggleExamMode()">
+                        <span class="slider"></span>
+                    </label>
+                    <label for="examMode">Exam Mode (disables hints & show buttons)</label>
+                </div>
+                <div class="option-row">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="customRange" onchange="toggleCustomRange()">
+                        <span class="slider"></span>
+                    </label>
+                    <label for="customRange">Custom Prefix Range</label>
+                    <select id="minPrefix" disabled>
+                        <option value="8">8</option>
+                        <option value="16">16</option>
+                        <option value="24" selected>24</option>
+                    </select>
+                    <span>to</span>
+                    <select id="maxPrefix" disabled>
+                        <option value="24">24</option>
+                        <option value="28">28</option>
+                        <option value="30" selected>30</option>
+                    </select>
+                </div>
+                <div class="option-row">
+                    <button class="btn" onclick="showStats()">📊 View Stats</button>
+                    <button class="btn" onclick="exportCSV()">📥 Export CSV</button>
+                    <button class="btn" onclick="exportJSON()">📥 Export JSON</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="target-section">
+            <h2>Target IP Address</h2>
+            <div class="target-ip-wrapper">
+                <div class="target-ip" id="targetIP"></div>
+                <button class="copy-btn" onclick="copyIP()" title="Copy IP">📋</button>
+            </div>
+            <button class="btn btn-primary" onclick="generateNewProblem()">Next Problem (N)</button>
+            <button class="btn btn-secondary" id="hintBtn" onclick="toggleHint()">💡 Hint (H)</button>
+            <button class="btn btn-secondary" id="stepsBtn" onclick="toggleSteps()">Steps</button>
+        </div>
+
+        <div class="hint-box" id="hintBox">
+            <strong>💡 Hint:</strong> <span id="hintText"></span>
+        </div>
+
+        <div class="steps-panel" id="stepsPanel">
+            <strong>Step-by-Step Solution:</strong>
+            <div id="stepsContent"></div>
+        </div>
+
+        <!-- Desktop Table Layout -->
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Field</th>
+                        <th style="width: 35%;">Your Answer</th>
+                        <th style="width: 10%;">Correct?</th>
+                        <th style="width: 25%;">Answer</th>
+                        <th style="width: 10%;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Network</strong></td>
+                        <td>
+                            <input type="text" id="input-network" placeholder="e.g., 192.168.1.0">
+                            <div class="error-msg" id="error-network"></div>
+                        </td>
+                        <td class="status" id="status-network"></td>
+                        <td class="answer-cell" id="answer-network"></td>
+                        <td><button class="show-btn" id="show-network" onclick="showAnswer('network')">Show</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>First Host</strong></td>
+                        <td>
+                            <input type="text" id="input-firstHost" placeholder="e.g., 192.168.1.1">
+                            <div class="error-msg" id="error-firstHost"></div>
+                        </td>
+                        <td class="status" id="status-firstHost"></td>
+                        <td class="answer-cell" id="answer-firstHost"></td>
+                        <td><button class="show-btn" id="show-firstHost" onclick="showAnswer('firstHost')">Show</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Last Host</strong></td>
+                        <td>
+                            <input type="text" id="input-lastHost" placeholder="e.g., 192.168.1.254">
+                            <div class="error-msg" id="error-lastHost"></div>
+                        </td>
+                        <td class="status" id="status-lastHost"></td>
+                        <td class="answer-cell" id="answer-lastHost"></td>
+                        <td><button class="show-btn" id="show-lastHost" onclick="showAnswer('lastHost')">Show</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Broadcast</strong></td>
+                        <td>
+                            <input type="text" id="input-broadcast" placeholder="e.g., 192.168.1.255">
+                            <div class="error-msg" id="error-broadcast"></div>
+                        </td>
+                        <td class="status" id="status-broadcast"></td>
+                        <td class="answer-cell" id="answer-broadcast"></td>
+                        <td><button class="show-btn" id="show-broadcast" onclick="showAnswer('broadcast')">Show</button></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Next Subnet</strong></td>
+                        <td>
+                            <input type="text" id="input-nextSubnet" placeholder="e.g., 192.168.2.0">
+                            <div class="error-msg" id="error-nextSubnet"></div>
+                        </td>
+                        <td class="status" id="status-nextSubnet"></td>
+                        <td class="answer-cell" id="answer-nextSubnet"></td>
+                        <td><button class="show-btn" id="show-nextSubnet" onclick="showAnswer('nextSubnet')">Show</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Mobile Card Layout -->
+        <div class="card-layout">
+            <div class="field-card">
+                <div class="field-card-header">
+                    <span class="field-card-label">Network</span>
+                    <span class="status" id="status-network-mobile"></span>
+                </div>
+                <div class="field-card-body">
+                    <div class="field-card-input-row">
+                        <input type="text" id="input-network-mobile" placeholder="e.g., 192.168.1.0">
+                        <button class="show-btn" id="show-network-mobile" onclick="showAnswer('network')">Show</button>
+                    </div>
+                    <div class="error-msg" id="error-network-mobile"></div>
+                    <div class="field-card-answer answer" id="answer-network-mobile"></div>
+                </div>
+            </div>
+
+            <div class="field-card">
+                <div class="field-card-header">
+                    <span class="field-card-label">First Host</span>
+                    <span class="status" id="status-firstHost-mobile"></span>
+                </div>
+                <div class="field-card-body">
+                    <div class="field-card-input-row">
+                        <input type="text" id="input-firstHost-mobile" placeholder="e.g., 192.168.1.1">
+                        <button class="show-btn" id="show-firstHost-mobile" onclick="showAnswer('firstHost')">Show</button>
+                    </div>
+                    <div class="error-msg" id="error-firstHost-mobile"></div>
+                    <div class="field-card-answer answer" id="answer-firstHost-mobile"></div>
+                </div>
+            </div>
+
+            <div class="field-card">
+                <div class="field-card-header">
+                    <span class="field-card-label">Last Host</span>
+                    <span class="status" id="status-lastHost-mobile"></span>
+                </div>
+                <div class="field-card-body">
+                    <div class="field-card-input-row">
+                        <input type="text" id="input-lastHost-mobile" placeholder="e.g., 192.168.1.254">
+                        <button class="show-btn" id="show-lastHost-mobile" onclick="showAnswer('lastHost')">Show</button>
+                    </div>
+                    <div class="error-msg" id="error-lastHost-mobile"></div>
+                    <div class="field-card-answer answer" id="answer-lastHost-mobile"></div>
+                </div>
+            </div>
+
+            <div class="field-card">
+                <div class="field-card-header">
+                    <span class="field-card-label">Broadcast</span>
+                    <span class="status" id="status-broadcast-mobile"></span>
+                </div>
+                <div class="field-card-body">
+                    <div class="field-card-input-row">
+                        <input type="text" id="input-broadcast-mobile" placeholder="e.g., 192.168.1.255">
+                        <button class="show-btn" id="show-broadcast-mobile" onclick="showAnswer('broadcast')">Show</button>
+                    </div>
+                    <div class="error-msg" id="error-broadcast-mobile"></div>
+                    <div class="field-card-answer answer" id="answer-broadcast-mobile"></div>
+                </div>
+            </div>
+
+            <div class="field-card">
+                <div class="field-card-header">
+                    <span class="field-card-label">Next Subnet</span>
+                    <span class="status" id="status-nextSubnet-mobile"></span>
+                </div>
+                <div class="field-card-body">
+                    <div class="field-card-input-row">
+                        <input type="text" id="input-nextSubnet-mobile" placeholder="e.g., 192.168.2.0">
+                        <button class="show-btn" id="show-nextSubnet-mobile" onclick="showAnswer('nextSubnet')">Show</button>
+                    </div>
+                    <div class="error-msg" id="error-nextSubnet-mobile"></div>
+                    <div class="field-card-answer answer" id="answer-nextSubnet-mobile"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" id="showAllBtn" onclick="showAll()">Show All (S)</button>
+            <button class="btn" onclick="checkAll()">Check All (Enter)</button>
+            <div class="checkbox-group">
+                <input type="checkbox" id="autoFill" onchange="handleAutoFill()">
+                <label for="autoFill">Auto Fill Non-Interesting Octets</label>
+            </div>
+            <div class="checkbox-group">
+                <input type="checkbox" id="autoCheck" onchange="handleAutoCheck()">
+                <label for="autoCheck">Auto Check</label>
+            </div>
+            <div class="dark-mode-toggle">
+                <span>🌙 Dark Mode</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sticky Action Bar (Mobile) -->
+    <div class="sticky-action-bar">
+        <button class="btn" onclick="checkAll()">Check All</button>
+        <button class="btn" onclick="generateNewProblem()">Next</button>
+        <button class="btn" id="showAllBtnMobile" onclick="showAll()">Show All</button>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <footer>
+        © 2026 Younes Ait Faraji. All rights reserved.
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
