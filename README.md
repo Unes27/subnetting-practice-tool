@@ -1,29 +1,39 @@
 # Subnetting Practice Tool
 
-A modern, interactive web application for mastering IP subnetting with real-time feedback and comprehensive practice modes.
+A modern, feature-rich web application for mastering IP subnetting with real-time feedback, exam simulator, and comprehensive practice modes.
 
-![Subnetting Practice Tool](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
+![PWA](https://img.shields.io/badge/PWA-enabled-purple.svg)
 
 ## 🚀 Features
 
 ### Core Functionality
-- **Random IP Generation**: Practice with randomly generated IPv4 addresses and CIDR notations (/8 to /30)
+- **Random IP Generation**: Practice with IPv4 addresses and CIDR notations (/8 to /30)
 - **Real-time Validation**: Instant feedback with ✔/✖ indicators
-- **Comprehensive Calculations**: Network, First Host, Last Host, Broadcast, and Next Subnet
+- **Comprehensive Calculations**: Network, First Host, Last Host, Broadcast, Next Subnet
 - **Step-by-Step Solutions**: Visual breakdown of subnet calculations
+- **Multiple Question Types**: Subnet outputs, host count, wildcard mask, host validation
 
 ### Practice Modes
 - **Practice Mode**: Hints, explanations, and show answers available
-- **Exam Mode**: Strict testing environment with disabled hints and answers
+- **Exam Simulator**: Timed exams with 10/20/50 questions, results review
 - **Difficulty Levels**: Easy (24-30), Medium (16-28), Hard (8-30)
 - **Custom Prefix Range**: Define your own prefix range for targeted practice
 
 ### Advanced Features
-- **Statistics Tracking**: Monitor your accuracy per prefix length
+- **Exam Simulator**: Full exam mode with scoring, time tracking, and detailed review
+- **Question Types**: 
+  - Subnet Outputs (5 fields)
+  - Host Count Calculator
+  - Wildcard Mask Converter
+  - Host Validation (Yes/No)
+- **Shareable Links**: Share specific problems via URL
+- **Statistics Tracking**: Monitor accuracy per prefix length
 - **Score & Streak System**: Gamified learning with multiplier bonuses
-- **Export Data**: Download your practice history as CSV or JSON
-- **Auto-Fill Helper**: Focus on the "interesting octet" while auto-filling others
+- **Export Data**: Download practice history as CSV or JSON
+- **PWA Support**: Install as app, works offline
+- **Auto-Fill Helper**: Focus on the "interesting octet"
 - **Keyboard Shortcuts**: 
   - `Enter` - Check All
   - `N` - Next Problem
@@ -31,12 +41,14 @@ A modern, interactive web application for mastering IP subnetting with real-time
   - `S` - Show All
 
 ### Modern UI/UX
+- **Premium Design**: Glassmorphism, gradients, smooth animations
 - **Responsive Design**: Seamless experience on desktop, tablet, and mobile
 - **Dark Mode**: Easy on the eyes for extended practice sessions
 - **Mobile Card Layout**: Optimized stacked cards for screens < 820px
 - **Sticky Action Bar**: Quick access to actions on mobile
 - **Toast Notifications**: Elegant feedback messages
 - **Accessibility**: Keyboard navigation and reduced motion support
+- **Install Button**: Add to home screen as PWA
 
 ## 📱 Demo
 
@@ -44,59 +56,98 @@ A modern, interactive web application for mastering IP subnetting with real-time
 
 ## 🛠️ Technologies
 
-- **HTML5**: Semantic markup
-- **CSS3**: Modern design with CSS custom properties
-- **Vanilla JavaScript**: No frameworks, pure ES6+
+- **HTML5**: Semantic markup with PWA support
+- **CSS3**: Modern design with CSS custom properties, animations
+- **Vanilla JavaScript**: Pure ES6+, no frameworks
 - **LocalStorage**: Persistent state and statistics
+- **Service Worker**: Offline functionality
+- **Web App Manifest**: Installable PWA
 
 ## 📦 Installation
 
-1. Clone the repository:
+### Online Use
+Visit: https://unes27.github.io/subnetting-practice-tool
+
+### Install as App
+1. Visit the website
+2. Click "📱 Install App" button
+3. Confirm installation
+4. Use offline anytime!
+
+### Local Development
 ```bash
 git clone https://github.com/Unes27/subnetting-practice-tool.git
-```
-
-2. Navigate to the project directory:
-```bash
 cd subnetting-practice-tool
-```
-
-3. Open `index.html` in your browser or use a local server:
-```bash
-# Using Python 3
 python -m http.server 8000
-
-# Using Node.js
-npx serve
+# Visit http://localhost:8000
 ```
-
-4. Visit `http://localhost:8000` in your browser
 
 ## 🎯 Usage
 
-1. **Start Practicing**: A random IP address with CIDR notation is displayed
-2. **Enter Your Answers**: Fill in the Network, First Host, Last Host, Broadcast, and Next Subnet fields
-3. **Check Your Work**: Click "Check All" or press `Enter` to validate
-4. **Learn from Mistakes**: Red indicators show incorrect answers with helpful explanations
-5. **Track Progress**: Monitor your score, streak, and accuracy in real-time
+### Practice Mode
+1. Select difficulty or custom prefix range
+2. Choose question type (Subnet/Host Count/Wildcard/Validation)
+3. Enter your answers
+4. Check your work with instant feedback
+5. Use hints and step-by-step solutions
+6. Track your progress with stats
 
-### Advanced Options
+### Exam Mode
+1. Click "📝 Start Exam"
+2. Choose number of questions (10/20/50)
+3. Set optional time limit
+4. Complete all questions
+5. Review results with detailed breakdown
+6. See pass/fail status and score
 
-- **Exam Mode**: Toggle for strict testing without hints
-- **Custom Prefix Range**: Set specific prefix ranges for focused practice
-- **View Stats**: See your worst-performing prefix lengths
-- **Export Data**: Download your practice history for analysis
+### Share Problems
+1. Click "🔗 Share" button
+2. Link copied to clipboard
+3. Share with friends or save for later
+4. Link loads exact same problem
 
 ## 📂 Project Structure
 
 ```
 subnetting-practice-tool/
-├── index.html          # Main HTML structure
+├── index.html          # Main application
 ├── styles.css          # Modern responsive styles
 ├── script.js           # Application logic
-├── README.md           # Project documentation
-└── LICENSE             # MIT License
+├── manifest.json       # PWA manifest
+├── sw.js              # Service worker
+├── favicon.svg        # App icon
+├── README.md          # Documentation
+├── LICENSE            # MIT License
+├── CONTRIBUTING.md    # Contribution guidelines
+└── .gitignore        # Git ignore rules
 ```
+
+## 🎓 Question Types
+
+### 1. Subnet Outputs (Classic)
+Calculate all 5 subnet fields:
+- Network Address
+- First Usable Host
+- Last Usable Host
+- Broadcast Address
+- Next Subnet
+
+### 2. Host Count
+Calculate the number of usable hosts in a subnet.
+
+### 3. Wildcard Mask
+Convert subnet mask to wildcard mask (inverse).
+
+### 4. Host Validation
+Determine if a given IP is a valid host in the subnet.
+
+## 🏆 Exam Simulator
+
+- **Question Sets**: 10, 20, or 50 questions
+- **Time Limits**: Optional 10, 20, or 30 minutes
+- **Scoring**: Percentage-based with pass/fail (70% threshold)
+- **Review**: Detailed breakdown of all mistakes
+- **History**: Track all exam attempts
 
 ## 🤝 Contributing
 
@@ -123,14 +174,28 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - Inspired by the need for better subnetting practice tools
 - Built with modern web standards and best practices
 - Designed for students, network engineers, and certification candidates
+- PWA technology for offline learning
 
 ## 📊 Browser Support
 
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+- Chrome (latest) ✅
+- Firefox (latest) ✅
+- Safari (latest) ✅
+- Edge (latest) ✅
+- Mobile browsers (iOS Safari, Chrome Mobile) ✅
+
+## 🔄 Updates
+
+### Version 2.0.0
+- ✨ Exam simulator with timed tests
+- 🎯 Multiple question types
+- 🔗 Shareable problem links
+- 📱 PWA support with offline mode
+- 🎨 Enhanced modern UI
+- 📊 Advanced statistics
+
+### Version 1.0.0
+- Initial release with core features
 
 ---
 
