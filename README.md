@@ -199,4 +199,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-© 2026 Younes Ait Faraji. All rights reserved.
+© 2026 [Younes Ait Faraji](https://github.com/Unes27). All rights reserved.
