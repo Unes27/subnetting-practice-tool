@@ -3,15 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Subnetting Practice Tool</title>
+    <title>Subnetting Practice Tool — Master IP Subnetting</title>
+    <meta name="description" content="Interactive subnetting practice tool. Master CIDR notation, subnet masks, network/broadcast addresses with real-time feedback, binary visualization, and progress tracking.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Subnetting Practice</h1>
-        <p class="subtitle">Master IP subnetting with interactive practice</p>
-        
+        <h1>⚡ Subnetting Practice</h1>
+        <p class="subtitle">Master IP subnetting with interactive practice & instant feedback</p>
+
+        <!-- XP / Level Bar -->
+        <div class="xp-bar-wrapper">
+            <div class="xp-level-badge" id="levelBadge">1</div>
+            <div class="xp-info">
+                <div class="xp-label">
+                    <span>Level <span id="levelText">1</span> — <span id="levelTitle">Beginner</span></span>
+                    <span id="xpText">0 / 100 XP</span>
+                </div>
+                <div class="xp-track">
+                    <div class="xp-fill" id="xpFill" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Bar -->
         <div class="stats-bar">
             <div class="stat-item">
                 <div class="stat-value" id="score">0</div>
@@ -31,12 +47,14 @@
             </div>
         </div>
 
+        <!-- Difficulty Selector -->
         <div class="difficulty-selector">
-            <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy</button>
-            <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium</button>
-            <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard</button>
+            <button class="difficulty-btn active" id="diff-easy" onclick="setDifficulty('easy')">Easy</button>
+            <button class="difficulty-btn" id="diff-medium" onclick="setDifficulty('medium')">Medium</button>
+            <button class="difficulty-btn" id="diff-hard" onclick="setDifficulty('hard')">Hard</button>
         </div>
 
+        <!-- Advanced Options -->
         <div class="advanced-panel">
             <h3 onclick="toggleAdvanced()">⚙️ Advanced Options <span id="advToggle">▼</span></h3>
             <div class="advanced-content" id="advancedContent">
@@ -58,7 +76,7 @@
                         <option value="16">16</option>
                         <option value="24" selected>24</option>
                     </select>
-                    <span>to</span>
+                    <span style="color: var(--color-text-muted)">to</span>
                     <select id="maxPrefix" disabled>
                         <option value="24">24</option>
                         <option value="28">28</option>
@@ -72,7 +90,42 @@
                 </div>
             </div>
         </div>
-        
+
+        <!-- Cheat Sheet -->
+        <div class="cheat-sheet">
+            <div class="cheat-sheet-header" onclick="toggleCheatSheet()">
+                📖 Subnetting Cheat Sheet <span id="cheatToggle">▼</span>
+            </div>
+            <div class="cheat-sheet-content" id="cheatSheetContent">
+                <table class="cheat-table">
+                    <thead>
+                        <tr>
+                            <th>CIDR</th>
+                            <th>Subnet Mask</th>
+                            <th>Block Size</th>
+                            <th>Hosts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>/30</td><td>255.255.255.252</td><td>4</td><td>2</td></tr>
+                        <tr><td>/29</td><td>255.255.255.248</td><td>8</td><td>6</td></tr>
+                        <tr><td>/28</td><td>255.255.255.240</td><td>16</td><td>14</td></tr>
+                        <tr><td>/27</td><td>255.255.255.224</td><td>32</td><td>30</td></tr>
+                        <tr><td>/26</td><td>255.255.255.192</td><td>64</td><td>62</td></tr>
+                        <tr><td>/25</td><td>255.255.255.128</td><td>128</td><td>126</td></tr>
+                        <tr><td>/24</td><td>255.255.255.0</td><td>256</td><td>254</td></tr>
+                        <tr><td>/23</td><td>255.255.254.0</td><td>512</td><td>510</td></tr>
+                        <tr><td>/22</td><td>255.255.252.0</td><td>1024</td><td>1022</td></tr>
+                        <tr><td>/21</td><td>255.255.248.0</td><td>2048</td><td>2046</td></tr>
+                        <tr><td>/20</td><td>255.255.240.0</td><td>4096</td><td>4094</td></tr>
+                        <tr><td>/16</td><td>255.255.0.0</td><td>65536</td><td>65534</td></tr>
+                        <tr><td>/8</td><td>255.0.0.0</td><td>16777216</td><td>16777214</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Target IP Section -->
         <div class="target-section">
             <h2>Target IP Address</h2>
             <div class="target-ip-wrapper">
@@ -81,9 +134,11 @@
             </div>
             <button class="btn btn-primary" onclick="generateNewProblem()">Next Problem (N)</button>
             <button class="btn btn-secondary" id="hintBtn" onclick="toggleHint()">💡 Hint (H)</button>
-            <button class="btn btn-secondary" id="stepsBtn" onclick="toggleSteps()">Steps</button>
+            <button class="btn btn-secondary" id="stepsBtn" onclick="toggleSteps()">📝 Steps</button>
+            <button class="btn btn-secondary" id="binaryBtn" onclick="toggleBinaryViz()">💻 Binary (B)</button>
         </div>
 
+        <!-- Hint & Steps -->
         <div class="hint-box" id="hintBox">
             <strong>💡 Hint:</strong> <span id="hintText"></span>
         </div>
@@ -93,19 +148,46 @@
             <div id="stepsContent"></div>
         </div>
 
+        <!-- Binary Visualization -->
+        <div class="binary-viz" id="binaryViz">
+            <div class="binary-viz-header">
+                <h3>💻 Binary Visualization</h3>
+            </div>
+            <div id="binaryContent"></div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-wrapper">
+            <span class="progress-label">Progress</span>
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-count" id="progressCount">0/6</span>
+        </div>
+
         <!-- Desktop Table Layout -->
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 20%;">Field</th>
-                        <th style="width: 35%;">Your Answer</th>
-                        <th style="width: 10%;">Correct?</th>
-                        <th style="width: 25%;">Answer</th>
-                        <th style="width: 10%;"></th>
+                        <th style="width: 18%;">Field</th>
+                        <th style="width: 33%;">Your Answer</th>
+                        <th style="width: 8%;">✓</th>
+                        <th style="width: 28%;">Answer</th>
+                        <th style="width: 13%;"></th>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td><strong>Subnet Mask</strong></td>
+                        <td>
+                            <input type="text" id="input-mask" placeholder="e.g., 255.255.255.0">
+                            <div class="error-msg" id="error-mask"></div>
+                        </td>
+                        <td class="status" id="status-mask"></td>
+                        <td class="answer-cell" id="answer-mask"></td>
+                        <td><button class="show-btn" id="show-mask" onclick="showAnswer('mask')">Show</button></td>
+                    </tr>
                     <tr>
                         <td><strong>Network</strong></td>
                         <td>
@@ -162,6 +244,21 @@
 
         <!-- Mobile Card Layout -->
         <div class="card-layout">
+            <div class="field-card">
+                <div class="field-card-header">
+                    <span class="field-card-label">Subnet Mask</span>
+                    <span class="status" id="status-mask-mobile"></span>
+                </div>
+                <div class="field-card-body">
+                    <div class="field-card-input-row">
+                        <input type="text" id="input-mask-mobile" placeholder="e.g., 255.255.255.0">
+                        <button class="show-btn" id="show-mask-mobile" onclick="showAnswer('mask')">Show</button>
+                    </div>
+                    <div class="error-msg" id="error-mask-mobile"></div>
+                    <div class="field-card-answer answer" id="answer-mask-mobile"></div>
+                </div>
+            </div>
+
             <div class="field-card">
                 <div class="field-card-header">
                     <span class="field-card-label">Network</span>
@@ -238,6 +335,7 @@
             </div>
         </div>
 
+        <!-- Controls -->
         <div class="controls">
             <button class="btn" id="showAllBtn" onclick="showAll()">Show All (S)</button>
             <button class="btn" onclick="checkAll()">Check All (Enter)</button>
@@ -249,13 +347,6 @@
                 <input type="checkbox" id="autoCheck" onchange="handleAutoCheck()">
                 <label for="autoCheck">Auto Check</label>
             </div>
-            <div class="dark-mode-toggle">
-                <span>🌙 Dark Mode</span>
-                <label class="toggle-switch">
-                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
-                    <span class="slider"></span>
-                </label>
-            </div>
         </div>
     </div>
 
@@ -266,8 +357,22 @@
         <button class="btn" id="showAllBtnMobile" onclick="showAll()">Show All</button>
     </div>
 
+    <!-- Keyboard Shortcuts Button -->
+    <button class="shortcuts-btn" id="shortcutsBtn" onclick="toggleShortcuts()" title="Keyboard Shortcuts">⌨️</button>
+    <div class="shortcuts-tooltip" id="shortcutsTooltip">
+        <h4>Keyboard Shortcuts</h4>
+        <div class="shortcut-item"><span>Next Problem</span> <span class="shortcut-key">N</span></div>
+        <div class="shortcut-item"><span>Check All</span> <span class="shortcut-key">Enter</span></div>
+        <div class="shortcut-item"><span>Show All</span> <span class="shortcut-key">S</span></div>
+        <div class="shortcut-item"><span>Toggle Hint</span> <span class="shortcut-key">H</span></div>
+        <div class="shortcut-item"><span>Binary View</span> <span class="shortcut-key">B</span></div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
+
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
 
     <footer>
         © 2026 <a href="https://github.com/Unes27" target="_blank" rel="noopener noreferrer">Younes Ait Faraji</a>. All rights reserved.
